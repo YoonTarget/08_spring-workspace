@@ -77,5 +77,22 @@
 		 where board_no = #{boardNo}
 		   and status = 'Y'
 	</select>
+	
+	<update id="deleteBoard">
+		update
+			   board
+		   set status = 'N'
+		 where board_no = #{boardNo}
+	</update>
+	
+	<update id="updateBoard">
+		update
+			   board
+		   set board_title = #{boardTitle}
+		   	 , board_content = #{boardContent}
+		   	 , origin_name = #{originName}
+		   	 , change_name = #{changeName}
+		 where board_no = #{boardNo}
+	</update>
 
 </mapper>
