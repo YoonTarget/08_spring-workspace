@@ -33,5 +33,11 @@ public class MemberDao {
 		return sqlsession.update("memberMapper.deleteMember", userId);
 		
 	}
+	
+	public int idCheck(SqlSessionTemplate sqlsession, String checkId) {
+		
+		return sqlsession.selectOne("memberMapper.idCheck", checkId);
+		
+	}
 
 }

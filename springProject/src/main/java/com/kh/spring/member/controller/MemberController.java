@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberServiceImpl;
@@ -344,6 +345,27 @@ public class MemberController {
 			
 		}
 		
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("idCheck.me")
+	public String idCheck(String checkId) {
+		
+		int count = mService.idCheck(checkId);
+		
+		
+		/* if-else문
+		if(count > 0) { // 이미 존재하는 아이디 => 사용 불가능(NNNNN)
+			return "NNNNN";
+		}
+		else { // 사용 가능한 아이디(NNNNY)
+			return "NNNNY";
+		}
+		*/
+		
+		// 삼항연산자
+		return count > 0? "NNNNN" : "NNNNY";
 		
 	}
 	

@@ -17,11 +17,13 @@
             <h2>회원가입</h2>
             <br>
 
-            <form action="insert.me" method="post">
+            <form action="insert.me" method="post" id="enrollForm">
                 <div class="form-group">
                     <label for="userId">* ID :</label>
                     <input type="text" class="form-control" id="userId" name="userId" placeholder="Please Enter ID" required>
-                    <div id="checkResult" style="font-size:0.8em"></div>
+                    <div id="checkResult" style="font-size:0.8em; display: none;">
+                    	
+                    </div>
                     
                     <br>
                     <label for="userPwd">* Password :</label>
@@ -54,7 +56,7 @@
                 </div>
                 <br>
                 <div class="btns" align="center">
-                    <button id="enrollBtn" type="submit" class="btn btn-primary">회원가입</button>
+                    <button id="enrollBtn" type="submit" class="btn btn-primary" disabled>회원가입</button>
                     <button type="reset" class="btn btn-danger"> 초기화</button>
                 </div>
             </form>
@@ -63,6 +65,59 @@
       
         <br><br>
     </div>
+    
+    <script>
+    	$(function() {
+    		// 아이디를 입력하는 input 요소객체 변수에 담아두기
+    		const $idInput = $("#enrollForm input[name=userId]");
+    		
+    		$idInput.keyup(function() {
+    			// console.log($idInput.val());
+    			
+    			// 우선 최소 5글자 이상으로 입력이 되어있을 때만 ajax를 요청해서 중복체크 하도록
+    			if($idInput.val().length >= 5) {
+	    			$.ajax({
+	    				url:"idCheck.me",
+	    				data:{
+	    					checkId:$idInput.val()
+	    				},
+	    				success:function(result) {
+	    					
+	    					if(result == "NNNNN") { // 사용불가능
+	    						
+	    						// => 빨간색 메세지 (사용불가능) 출력
+	    						$("#checkResult").show();
+	    						$("#checkResult").css("color", "red").text("이미 사용중인 아이디입니다. 다시 입력해 주세요.");	    						
+	    						
+	    						// => 버튼 비활성화
+	    						$("#enrollForm :submit").attr("disabled", true);
+	    						
+	    					}
+	    					else { // 사용가능
+	    						
+	    						// => 초록색 메세지 (사용가능) 출력
+	    						$("#checkResult").show();
+	    						$("#checkResult").css("color", "green").text("멋진 아이디네요!! 사용 가능합니다.");	  
+	    						
+	    						// => 버튼 활성화
+	    						$("#enrollForm :submit").removeAttr("disabled");
+	    						
+	    					}
+	    					
+	    				},
+	    				error:function() {
+	    					console.log("ajax 통신 실패ㅠㅠ");
+	    				}
+	    			});
+    			}
+    			else { // 5글자 미만일 경우 => 메시지 숨기기, 버튼 비활성화
+    				$("#checkResult").hide();
+    			
+    				$("#enrollForm :submit").attr("disabled", true);
+    			}
+    		});
+    	})
+    </script>
 
     <!-- 이쪽에 푸터바 포함할꺼임 -->
     <jsp:include page="../common/footer.jsp"/>
