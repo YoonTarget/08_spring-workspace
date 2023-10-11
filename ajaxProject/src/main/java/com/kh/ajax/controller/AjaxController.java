@@ -1,12 +1,19 @@
 package com.kh.ajax.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.kh.ajax.model.vo.Member;
 
 @Controller
 public class AjaxController {
@@ -37,6 +44,7 @@ public class AjaxController {
 	 * 		따라서 내가 리턴하는 문자열이 응답뷰가 아니라 응답데이터라는 걸 선언해야 함
 	 * 		어노테이션 @ResponseBody를 붙여야됨
 	 */
+	/*
 	@ResponseBody
 	@RequestMapping(value="ajax1.do", produces="text/html; charset=UTF-8")
 	public String ajaxMethod1(String name, int age) {
@@ -44,6 +52,98 @@ public class AjaxController {
 		String responseData = name + "은(는) " + age + "살 입니다.";
 		
 		return responseData;
+		
+	}
+	*/
+	
+	/*
+	// 다수의 응답데이터가 있을 경우??
+	@RequestMapping("ajax1.do")
+	public void ajaxMethod1(String name, int age, HttpServletResponse response) throws IOException {
+		// 요청처리가 다 됐다는 가정하에 데이터 응답
+		
+		
+		// response.setContentType("text/html; charset=UTF-8");
+		// response.getWriter().print(name);
+		// response.getWriter().print(age);
+		// 연이어서 출력하는 데이터가 하나의 문자열로 연이어져 있음
+		
+		
+		// JSON(JavaScript Object Notation) 형태로 담아서 응답
+		// JSONArray => [값, 값, 값, ...]			=> 자바에서의 ArrayList와 유사 (list에 추가할 때는 add)
+		// JSONObject => {키:값, 키:값, 키:값, ...}	=> 자바에서의 HashMap과 유사 (map에 추가할 때는 put)
+		
+		// 첫번째 방법. JSONArray로 담아서 응답
+		
+		// JSONArray jArr = new JSONArray(); // []
+		// jArr.add(name); // ["차은우"]
+		// jArr.add(age); // ["차은우", 20]
+		
+		
+		// 두번째 방법. JSONObject로 담아서 응답
+		JSONObject jobj = new JSONObject(); // {}
+		jobj.put("name", name); // {name:'차은우'}
+		jobj.put("age", age); // {name:'차은우', age:20}
+		
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jobj);
+		
+	}
+	*/
+	
+	@ResponseBody
+	@RequestMapping(value="ajax1.do", produces="application/json; charset=UTF-8")
+	public String ajaxMethod1(String name, int age) {
+		
+		JSONObject jobj = new JSONObject(); // {}
+		jobj.put("name", name); // {name:'차은우'}
+		jobj.put("age", age); // {name:'차은우', age:20}
+		
+		return jobj.toJSONString(); // "{name:'차은우', age:20}"
+		
+	}
+	/*
+	@ResponseBody
+	@RequestMapping(value="ajax2.do", produces="application/json; charset=UTF-8")
+	public String ajaxMethod2(int num) {
+		
+		// Member m = mService.selectMember(num);
+		Member m = new Member("user01", "pass01", "차은우", 20, "010-1111-2222");
+		
+		// JSON 형태로 만들어서 응답
+		JSONObject jobj = new JSONObject(); // {}
+		jobj.put("userId", m.getUserId()); // {userId:'user01'}
+		jobj.put("userName", m.getUserName()); // {userId:'user01', name:'차은우'}
+		jobj.put("age", m.getAge());
+		jobj.put("phone", m.getPhone());
+		
+		return jobj.toJSONString();
+		
+	}
+	*/
+	
+	@ResponseBody
+	@RequestMapping(value="ajax2.do", produces="application/json; charset=UTF-8")
+	public String ajaxMethod2(int num) {
+		
+		// Member m = mService.selectMember(num);
+		Member m = new Member("user01", "pass01", "차은우", 20, "010-1111-2222");
+		
+		return new Gson().toJson(m); // {userId:'user01', userPwd:'pass01', ...}
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="ajax3.do", produces="application/json; charset=UTF-8")
+	public String ajaxMethod3() {
+		
+		// ArrayList<Member> list = mService.selectList();
+		ArrayList<Member> list = new ArrayList<Member>();
+		list.add(new Member("user01", "pass01", "차은우", 20, "010-1111-2222")); // [{은우 객체}]
+		list.add(new Member("user02", "pass02", "차응우옌", 30, "010-3333-4444")); // [{은우 객체}, {응우옌 객체}]
+		list.add(new Member("user03", "pass03", "어먼상", 40, "010-5555-6666")); // [{은우 객체}, {응우옌 객체}, {어먼상 객체}]
+
+		return new Gson().toJson(list); // [{}, {}, {}]
 		
 	}
 	
