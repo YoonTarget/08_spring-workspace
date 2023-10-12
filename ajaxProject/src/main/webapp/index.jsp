@@ -20,6 +20,15 @@
 	
 	<h5 id="response">헤이~~~~ 정신 똑띠 차려라~~~~</h5>
 	
+	<div>
+        <h1>Excel Download</h1>
+        <form action="test.do" method="get">
+            <button type="submit">Excel</button>
+        </form>
+    </div>
+	
+	
+	
 	<script>
 		/*
 		$("#btn").click(function() {
